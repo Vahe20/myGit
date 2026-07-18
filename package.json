@@ -2,14 +2,27 @@
   "name": "myGit",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "lint:js": "eslint .",
+    "lint:js:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "lint": "npm run lint:js",
+    "lint:fix": "npm run lint:js:fix && npm run format"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.1.1",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.5",
     "tsx": "^4.23.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.64.0"
   },
   "private": true
 }
