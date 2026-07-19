@@ -1,4 +1,4 @@
-import IIndex from './IIndex';
+import { IIndex } from './IIndex';
 import { IFileSystem } from '../../utils/fs/IFileSystem';
 import { GitPaths } from '../../configs/GitPaths';
 

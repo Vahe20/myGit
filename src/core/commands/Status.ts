@@ -1,4 +1,4 @@
-import IIndex from '../index/IIndex';
+import { IIndex } from '../index/IIndex';
 import { FileScanner } from '../../utils/scanner/FileScanner';
 import { IFileSystem } from '../../utils/fs/IFileSystem';
 import { BlobObject } from '../objects/BlobObject';
@@ -13,9 +13,7 @@ export class Status {
   ) {}
 
   async execute() {
-    await this.index.load();
-
-    const indexFiles = this.index.getAll();
+    const indexFiles = (await this.index.load()).getAll();
 
     const files = await this.scanner.scan();
 

@@ -1,4 +1,4 @@
-import IIndex from '../index/IIndex';
+import { IIndex } from '../index/IIndex';
 import { IFileSystem } from '../../utils/fs/IFileSystem';
 import { BlobObject } from '../objects/BlobObject';
 import { IObjectStore } from '../objects/IObjectStore';

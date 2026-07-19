@@ -32,7 +32,7 @@ export class FileScanner implements IFileScanner {
     for (const item of list) {
       const relativePath = PathNormalizer(path.relative(rootPath, item));
 
-      if (ignoreRules.includes(relativePath)) {
+      if (ignoreRules.includes(relativePath) || relativePath === '.mygit') {
         continue;
       }
 

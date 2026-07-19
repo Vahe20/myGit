@@ -1,4 +1,4 @@
-export default interface IIndex {
+export interface IIndex {
   add(filePath: string, hash: string): IIndex;
 
   get(filePath: string): string | undefined;

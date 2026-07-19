@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { FileSystem } from './utils/fs/FileSystem';
 import { GitPaths } from './configs/GitPaths';
 import { ObjectStore } from './core/objects/ObjectStore';
@@ -10,6 +9,8 @@ import { Index } from './core/index/Index';
 import { FileScanner } from './utils/scanner/FileScanner';
 import { Status } from './core/commands/Status';
 import { PathNormalizer } from './utils/PathNormalizer';
+import { WriteTree } from './core/commands/Write-Tree';
+import { CommitTree } from './core/commands/Commit-Tree';
 
 const main = async () => {
   const args = process.argv.slice(2);
@@ -62,7 +63,7 @@ const main = async () => {
 
       console.log(
         '\nChanges to be committed:\n' +
-          '  (use "git restore --staged <file>..." to unstage)',
+          '\t(use \\"git restore --staged <file>...\\" to unstage)',
       );
 
       staged.forEach((value) => {
@@ -71,7 +72,7 @@ const main = async () => {
 
       console.log(
         '\nChanges not staged for commit:\n' +
-          '  (use "git restore --staged <file>..." to unstage)',
+          '\t(use \\"git restore --staged <file>...\\" to unstage)',
       );
 
       modified.forEach((value) => {
@@ -80,12 +81,24 @@ const main = async () => {
 
       console.log(
         '\nUntracked files:\n' +
-          '  (use "git add <file>..." to include in what will be committed)',
+          '\t(use \\"git add <file>...\\" to include in what will be committed)',
       );
 
       untracked.forEach((value) => {
         console.log(`\x1b[31m\t ${value.path}\x1b[0m`);
       });
+      break;
+    }
+
+    case 'write-tree': {
+      const hash = await new WriteTree(objectStore).execute(index);
+      console.log('tree hash: ', hash);
+      break;
+    }
+
+    case 'commit-tree': {
+      const hash = args[1];
+      await new CommitTree(fileSystem, objectStore, gitPath).execute(hash);
       break;
     }
 
