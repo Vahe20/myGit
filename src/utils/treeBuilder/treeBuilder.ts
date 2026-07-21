@@ -1,8 +1,8 @@
-import { IIndex } from '../../core/index/IIndex';
+import { IIndexService } from '../../core/index/IIndexService';
 import { TreeNode } from './TreeNode';
 
 export class TreeBuilder {
-  async build(index: IIndex): Promise<TreeNode> {
+  async build(index: IIndexService): Promise<TreeNode> {
     const data = (await index.load()).getAll();
     const root = new TreeNode('', 'tree');
 

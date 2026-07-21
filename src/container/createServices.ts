@@ -1,12 +1,12 @@
-import { Logger } from '../utils/logger/Logger';
-import { GitPaths } from '../configs/GitPaths';
-import { FileSystem } from '../utils/fs/FileSystem';
-import { FileScanner } from '../utils/scanner/FileScanner';
-import { SHA1HashService } from '../core/hashing/SHA1HashService';
 import { ZlibCompressionService } from '../compression/ZlibCompressionService';
-import { Index } from '../core/index/Index';
+import { GitPaths } from '../configs/GitPaths';
+import { SHA1HashService } from '../core/hashing/SHA1HashService';
+import { IndexService } from '../core/index/IndexService';
 import { ObjectStore } from '../core/objects/ObjectStore';
 import { Repository } from '../core/repository/Repository';
+import { FileSystem } from '../utils/fs/FileSystem';
+import { Logger } from '../utils/logger/Logger';
+import { FileScanner } from '../utils/scanner/FileScanner';
 
 export interface Services {
   logger: Logger;
@@ -15,7 +15,7 @@ export interface Services {
   scanner: FileScanner;
   hashService: SHA1HashService;
   compressionService: ZlibCompressionService;
-  index: Index;
+  index: IndexService;
   objectStore: ObjectStore;
   repository: Repository;
 }
@@ -27,7 +27,7 @@ export const createServices = (): Services => {
   const scanner = new FileScanner(fileSystem, gitPath);
   const hashService = new SHA1HashService();
   const compressionService = new ZlibCompressionService();
-  const index = new Index(fileSystem, gitPath);
+  const index = new IndexService(fileSystem, gitPath);
   const repository = new Repository(fileSystem, gitPath);
 
   const objectStore = new ObjectStore(

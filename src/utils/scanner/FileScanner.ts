@@ -1,9 +1,10 @@
 import path from 'node:path';
-import { IFileScanner } from './IFileScanner';
+
+import { GitPaths } from '../../configs/GitPaths';
 import { IFileSystem } from '../fs/IFileSystem';
 import { Ignore } from '../ignore/Ignore';
-import { GitPaths } from '../../configs/GitPaths';
-import { PathNormalizer } from '../PathNormalizer';
+import { PathNormalizer } from '../normalizer/PathNormalizer';
+import { IFileScanner } from './IFileScanner';
 
 export class FileScanner implements IFileScanner {
   constructor(

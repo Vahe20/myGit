@@ -8,6 +8,7 @@ export class GitPaths {
   private refsPath: string;
   private headPath: string;
   private indexPath: string;
+
   constructor(basePath: string) {
     this.basePath = basePath;
     this.ignorePath = path.join(basePath, '.mygitignore');

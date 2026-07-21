@@ -1,8 +1,9 @@
-const { createDefaultEsmPreset } = require('ts-jest');
+import type { Config } from 'jest';
+import { createDefaultEsmPreset } from 'ts-jest';
 
 const preset = createDefaultEsmPreset();
 
-module.exports = {
+const config: Config = {
   ...preset,
 
   testEnvironment: 'node',
@@ -11,7 +12,13 @@ module.exports = {
 
   testMatch: ['**/*.test.ts'],
 
+  moduleFileExtensions: ['ts', 'js'],
+
+  extensionsToTreatAsEsm: ['.ts'],
+
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
 
   coverageDirectory: 'coverage',
 };
+
+export default config;

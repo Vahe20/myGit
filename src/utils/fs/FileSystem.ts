@@ -1,5 +1,6 @@
-import path from 'node:path';
 import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
 import { FileInfo, IFileSystem } from './IFileSystem';
 
 export class FileSystem implements IFileSystem {

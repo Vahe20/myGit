@@ -1,5 +1,7 @@
 import * as zlib from 'node:zlib';
+
 import { promisify } from 'util';
+
 import { ICompressionService } from './ICompressionService';
 
 export class ZlibCompressionService implements ICompressionService {

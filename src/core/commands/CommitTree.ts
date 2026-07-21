@@ -1,17 +1,18 @@
-import { CommitObject } from '../objects/CommitObject';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { IObjectStore } from '../objects/IObjectStore';
 import { GitPaths } from '../../configs/GitPaths';
+import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { CommitObject } from '../objects/CommitObject';
+import { IObjectStore } from '../objects/IObjectStore';
+import { ICommand } from './ICommand';
 
-export class CommitTree {
+export class CommitTree implements ICommand<string, [string, string]> {
   constructor(
     private readonly fileSystem: IFileSystem,
     private readonly objectStore: IObjectStore,
-    private readonly gitPath: GitPaths,
+    private readonly gitPaths: GitPaths,
   ) {}
 
   async execute(treeHash: string, message: string) {
-    const head = (await this.fileSystem.read(this.gitPath.head()))
+    const head = (await this.fileSystem.read(this.gitPaths.head()))
       .toString()
       .trim();
 
@@ -21,7 +22,7 @@ export class CommitTree {
 
     const ref = head.split(' ')[1];
 
-    const branchPath = this.gitPath.myGit() + ref;
+    const branchPath = this.gitPaths.myGit() + '/' + ref;
 
     let parent: string | undefined;
 

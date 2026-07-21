@@ -1,8 +1,9 @@
+import path from 'node:path';
+
+import { ICompressionService } from '../../compression/ICompressionService';
+import { GitPaths } from '../../configs/GitPaths';
 import { IFileSystem } from '../../utils/fs/IFileSystem';
 import { IHashService } from '../hashing/IHashService';
-import { ICompressionService } from '../../compression/ICompressionService';
-import path from 'node:path';
-import { GitPaths } from '../../configs/GitPaths';
 import { IObjectStore } from './IObjectStore';
 
 export class ObjectStore implements IObjectStore {

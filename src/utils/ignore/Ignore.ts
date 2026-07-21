@@ -1,5 +1,5 @@
-import { IFileSystem } from '../fs/IFileSystem';
 import { GitPaths } from '../../configs/GitPaths';
+import { IFileSystem } from '../fs/IFileSystem';
 
 export const Ignore = async (
   fileSystem: IFileSystem,

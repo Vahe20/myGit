@@ -1,13 +1,13 @@
-export interface IIndex {
-  add(filePath: string, hash: string): IIndex;
+export interface IIndexService {
+  add(filePath: string, hash: string): IIndexService;
 
   get(filePath: string): string | undefined;
 
-  remove(filePath: string): IIndex;
+  remove(filePath: string): IIndexService;
 
   getAll(): Map<string, string>;
 
-  save(): Promise<IIndex>;
+  save(): Promise<IIndexService>;
 
-  load(): Promise<IIndex>;
+  load(): Promise<IIndexService>;
 }

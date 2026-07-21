@@ -1,5 +1,5 @@
-import { IFileSystem } from '../../utils/fs/IFileSystem';
 import { GitPaths } from '../../configs/GitPaths';
+import { IFileSystem } from '../../utils/fs/IFileSystem';
 
 export class Repository {
   constructor(

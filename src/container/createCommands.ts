@@ -1,10 +1,11 @@
-import { Services } from './createServices';
-import { Init } from '../core/commands/Init';
 import { Add } from '../core/commands/Add';
+import { Commit } from '../core/commands/Commit';
+import { CommitTree } from '../core/commands/CommitTree';
+import { Init } from '../core/commands/Init';
+import { Log } from '../core/commands/Log';
 import { Status } from '../core/commands/Status';
 import { WriteTree } from '../core/commands/WriteTree';
-import { CommitTree } from '../core/commands/CommitTree';
-import { Commit } from '../core/commands/Commit';
+import { Services } from './createServices';
 
 export interface Commands {
   init: Init;
@@ -13,12 +14,14 @@ export interface Commands {
   'write-tree': WriteTree;
   'commit-tree': CommitTree;
   commit: Commit;
+  log: Log;
 }
 
 export const createCommands = (services: Services): Commands => {
   const init = new Init(services.repository);
   const add = new Add(
     services.fileSystem,
+    services.scanner,
     services.objectStore,
     services.index,
   );
@@ -35,6 +38,12 @@ export const createCommands = (services: Services): Commands => {
     services.gitPath,
   );
   const commit = new Commit(writeTree, commitTree, services.index);
+  const log = new Log(
+    services.fileSystem,
+    services.objectStore,
+    services.gitPath,
+    services.logger,
+  );
 
   return {
     init,
@@ -43,5 +52,6 @@ export const createCommands = (services: Services): Commands => {
     'write-tree': writeTree,
     'commit-tree': commitTree,
     commit,
+    log,
   };
 };

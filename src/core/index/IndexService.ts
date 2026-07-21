@@ -1,8 +1,8 @@
-import { IIndex } from './IIndex';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
 import { GitPaths } from '../../configs/GitPaths';
+import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { IIndexService } from './IIndexService';
 
-export class Index implements IIndex {
+export class IndexService implements IIndexService {
   private data = new Map<string, string>();
 
   constructor(
@@ -10,7 +10,7 @@ export class Index implements IIndex {
     private readonly gitPaths: GitPaths,
   ) {}
 
-  public add(filePath: string, hash: string): IIndex {
+  public add(filePath: string, hash: string): IIndexService {
     this.data.set(filePath, hash);
     return this;
   }
@@ -23,12 +23,12 @@ export class Index implements IIndex {
     return new Map<string, string>(this.data);
   }
 
-  public remove(filePath: string): IIndex {
+  public remove(filePath: string): IIndexService {
     this.data.delete(filePath);
     return this;
   }
 
-  public async save(): Promise<IIndex> {
+  public async save(): Promise<IIndexService> {
     const json = JSON.stringify([...this.data.entries()], null, 2);
 
     await this.fileSystem.write(this.gitPaths.index(), Buffer.from(json));
@@ -36,7 +36,7 @@ export class Index implements IIndex {
     return this;
   }
 
-  public async load(): Promise<IIndex> {
+  public async load(): Promise<IIndexService> {
     if (!(await this.fileSystem.exists(this.gitPaths.index()))) {
       this.data.clear();
       return this;
