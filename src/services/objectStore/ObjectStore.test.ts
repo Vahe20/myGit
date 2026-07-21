@@ -1,9 +1,9 @@
 import path from 'node:path';
 
-import { ICompressionService } from '../../compression/ICompressionService';
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { IHashService } from '../hashing/IHashService';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { ICompressionService } from '../../infrastructure/compression/ICompressionService';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IHashService } from '../../infrastructure/hashing/IHashService';
 import { ObjectStore } from './ObjectStore';
 
 const createFileSystem = (
@@ -19,7 +19,7 @@ const createFileSystem = (
 });
 
 describe('ObjectStore', () => {
-  const gitPaths = new GitPaths('/repo');
+  const gitPaths = new RepositoryPaths('/repo');
   const hash = 'abcdef1234567890abcdef1234567890abcdef12';
   const data = Buffer.from('blob 5\0hello');
   const compressed = Buffer.from('compressed');

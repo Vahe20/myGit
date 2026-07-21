@@ -1,14 +1,14 @@
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { FileScanner } from '../../utils/scanner/FileScanner';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IFileScanner } from '../../services/fileScanner/IFileScanner';
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { IIndexService } from '../index/IIndexService';
 import { BlobObject } from '../objects/BlobObject';
-import { IObjectStore } from '../objects/IObjectStore';
 import { ICommand } from './ICommand';
 
 export class Add implements ICommand<void, [string]> {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly scanner: FileScanner,
+    private readonly scanner: IFileScanner,
     private readonly objectStore: IObjectStore,
     private readonly index: IIndexService,
   ) {}

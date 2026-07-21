@@ -1,5 +1,5 @@
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { IIndexService } from '../index/IIndexService';
-import { IObjectStore } from '../objects/IObjectStore';
 import { WriteTree } from './WriteTree';
 
 describe('WriteTree', () => {

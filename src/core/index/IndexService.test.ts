@@ -1,5 +1,5 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { IndexService } from './IndexService';
 
 const createFileSystem = (
@@ -15,7 +15,7 @@ const createFileSystem = (
 });
 
 describe('IndexService', () => {
-  const gitPaths = new GitPaths('/repo');
+  const gitPaths = new RepositoryPaths('/repo');
 
   it('adds, gets, removes, and returns a copy of index entries', () => {
     const index = new IndexService(createFileSystem(), gitPaths);

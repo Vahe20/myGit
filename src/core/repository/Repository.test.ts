@@ -1,5 +1,5 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { Repository } from './Repository';
 
 const createFileSystem = (
@@ -15,7 +15,7 @@ const createFileSystem = (
 });
 
 describe('Repository', () => {
-  const gitPaths = new GitPaths('/repo');
+  const gitPaths = new RepositoryPaths('/repo');
 
   it('creates repository directories and default files', async () => {
     const fileSystem = createFileSystem({

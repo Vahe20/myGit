@@ -1,10 +1,10 @@
 import path from 'node:path';
 
-import { GitPaths } from './GitPaths';
+import { RepositoryPaths } from './RepositoryPaths';
 
-describe('GitPaths', () => {
+describe('RepositoryPaths', () => {
   it('builds repository paths from the base path', () => {
-    const paths = new GitPaths('/repo');
+    const paths = new RepositoryPaths('/repo');
 
     expect(paths.base()).toBe('/repo');
     expect(paths.ignore()).toBe(path.join('/repo', '.mygitignore'));

@@ -1,13 +1,13 @@
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { FileScanner } from '../../utils/scanner/FileScanner';
-import { IHashService } from '../hashing/IHashService';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IHashService } from '../../infrastructure/hashing/IHashService';
+import { IFileScanner } from '../../services/fileScanner/IFileScanner';
 import { IIndexService } from '../index/IIndexService';
 import { BlobObject } from '../objects/BlobObject';
 
 export class Status {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly scanner: FileScanner,
+    private readonly scanner: IFileScanner,
     private readonly index: IIndexService,
     private readonly hashService: IHashService,
   ) {}

@@ -1,7 +1,10 @@
 import path from 'node:path';
 
-import { GitPaths } from '../../configs/GitPaths';
-import { FileInfo, IFileSystem } from '../fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import {
+  FileInfo,
+  IFileSystem,
+} from '../../infrastructure/fileSystem/IFileSystem';
 import { FileScanner } from './FileScanner';
 
 const file = (): FileInfo => ({ isFile: true, isDirectory: false });
@@ -9,7 +12,7 @@ const directory = (): FileInfo => ({ isFile: false, isDirectory: true });
 
 describe('FileScanner', () => {
   const root = path.resolve('/repo');
-  const gitPaths = new GitPaths(root);
+  const gitPaths = new RepositoryPaths(root);
 
   it('returns files recursively using normalized relative paths', async () => {
     const srcDir = path.join(root, 'src');
@@ -46,7 +49,7 @@ describe('FileScanner', () => {
     );
   });
 
-  it('skips .mygit and exact paths from ignore rules', async () => {
+  it('skips .mygit and exact paths from ignoreService rules', async () => {
     const myGitDir = path.join(root, '.mygit');
     const ignoredFile = path.join(root, 'dist.js');
     const trackedFile = path.join(root, 'src.ts');

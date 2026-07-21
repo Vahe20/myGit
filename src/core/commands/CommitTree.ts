@@ -1,34 +1,16 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { CommitObject } from '../objects/CommitObject';
-import { IObjectStore } from '../objects/IObjectStore';
+import { RefStore } from '../refs/RefStore';
 import { ICommand } from './ICommand';
 
 export class CommitTree implements ICommand<string, [string, string]> {
   constructor(
-    private readonly fileSystem: IFileSystem,
     private readonly objectStore: IObjectStore,
-    private readonly gitPaths: GitPaths,
+    private readonly refStore: RefStore,
   ) {}
 
-  async execute(treeHash: string, message: string) {
-    const head = (await this.fileSystem.read(this.gitPaths.head()))
-      .toString()
-      .trim();
-
-    if (!head.startsWith('ref:')) {
-      throw new Error('Detached HEAD not supported');
-    }
-
-    const ref = head.split(' ')[1];
-
-    const branchPath = this.gitPaths.myGit() + '/' + ref;
-
-    let parent: string | undefined;
-
-    if (await this.fileSystem.exists(branchPath)) {
-      parent = (await this.fileSystem.read(branchPath)).toString().trim();
-    }
+  async execute(treeHash: string, message: string): Promise<string> {
+    const parent = await this.refStore.getCurrentCommit();
 
     const commitObject = new CommitObject({
       tree: treeHash,
@@ -39,7 +21,7 @@ export class CommitTree implements ICommand<string, [string, string]> {
 
     const hash = await this.objectStore.save(commitObject.serialize());
 
-    await this.fileSystem.write(branchPath, Buffer.from(hash));
+    await this.refStore.updateCurrentBranch(hash);
 
     return hash;
   }

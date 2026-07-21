@@ -1,9 +1,9 @@
 import path from 'node:path';
 
-import { ICompressionService } from '../../compression/ICompressionService';
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { IHashService } from '../hashing/IHashService';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { ICompressionService } from '../../infrastructure/compression/ICompressionService';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IHashService } from '../../infrastructure/hashing/IHashService';
 import { IObjectStore } from './IObjectStore';
 
 export class ObjectStore implements IObjectStore {
@@ -11,7 +11,7 @@ export class ObjectStore implements IObjectStore {
     private readonly fileSystem: IFileSystem,
     private readonly hashService: IHashService,
     private readonly compression: ICompressionService,
-    private readonly gitPaths: GitPaths,
+    private readonly gitPaths: RepositoryPaths,
   ) {}
 
   public async save(data: Buffer): Promise<string> {

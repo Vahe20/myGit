@@ -1,7 +1,7 @@
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { FileScanner } from '../../utils/scanner/FileScanner';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { FileScanner } from '../../services/fileScanner/FileScanner';
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { IIndexService } from '../index/IIndexService';
-import { IObjectStore } from '../objects/IObjectStore';
 import { Add } from './Add';
 
 const createFileSystem = (): IFileSystem => ({

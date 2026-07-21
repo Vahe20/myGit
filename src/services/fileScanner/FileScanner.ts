@@ -1,23 +1,23 @@
 import path from 'node:path';
 
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../fs/IFileSystem';
-import { Ignore } from '../ignore/Ignore';
-import { PathNormalizer } from '../normalizer/PathNormalizer';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { PathNormalizer } from '../../utils/normalizer/PathNormalizer';
+import { IgnoreService } from '../ignoreService/IgnoreService';
 import { IFileScanner } from './IFileScanner';
 
 export class FileScanner implements IFileScanner {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: GitPaths,
+    private readonly gitPaths: RepositoryPaths,
+    private readonly ignoreService = new IgnoreService(fileSystem, gitPaths),
   ) {}
 
   public async scan(): Promise<string[]> {
     const rootPath = this.gitPaths.base();
     const result: string[] = [];
-    const ignoreRules = await Ignore(this.fileSystem, this.gitPaths);
 
-    await this.directoryScan(rootPath, rootPath, result, ignoreRules);
+    await this.directoryScan(rootPath, rootPath, result);
 
     return result;
   }
@@ -26,14 +26,13 @@ export class FileScanner implements IFileScanner {
     rootPath: string,
     currentPath: string,
     result: string[],
-    ignoreRules: string[],
   ): Promise<void> {
     const list = await this.fileSystem.list(currentPath);
 
     for (const item of list) {
       const relativePath = PathNormalizer(path.relative(rootPath, item));
 
-      if (ignoreRules.includes(relativePath) || relativePath === '.mygit') {
+      if (await this.ignoreService.isIgnored(relativePath)) {
         continue;
       }
 
@@ -42,7 +41,7 @@ export class FileScanner implements IFileScanner {
       if (info.isFile) {
         result.push(relativePath);
       } else if (info.isDirectory) {
-        await this.directoryScan(rootPath, item, result, ignoreRules);
+        await this.directoryScan(rootPath, item, result);
       }
     }
   }

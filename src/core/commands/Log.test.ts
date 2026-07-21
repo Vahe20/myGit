@@ -1,8 +1,9 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { Logger } from '../../utils/logger/Logger';
 import { CommitObject } from '../objects/CommitObject';
-import { IObjectStore } from '../objects/IObjectStore';
+import { RefStore } from '../refs/RefStore';
 import { Log } from './Log';
 
 const createFileSystem = (
@@ -18,7 +19,7 @@ const createFileSystem = (
 });
 
 describe('Log', () => {
-  const gitPaths = new GitPaths('/repo');
+  const gitPaths = new RepositoryPaths('/repo');
 
   let consoleSpy: jest.SpiedFunction<typeof console.log>;
 
@@ -35,6 +36,7 @@ describe('Log', () => {
       read: jest.fn().mockResolvedValue(Buffer.from('ref: refs/heads/main\n')),
       exists: jest.fn().mockResolvedValue(false),
     });
+    const refStore = new RefStore(fileSystem, gitPaths);
     const objectStore: IObjectStore = {
       save: jest.fn(),
       read: jest.fn(),
@@ -44,7 +46,7 @@ describe('Log', () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(logger, 'info');
 
-    await new Log(fileSystem, objectStore, gitPaths, logger).execute();
+    await new Log(objectStore, refStore, logger).execute();
 
     expect(logger.warn).not.toHaveBeenCalled();
     expect(logger.info).not.toHaveBeenCalled();
@@ -58,6 +60,7 @@ describe('Log', () => {
         .mockResolvedValueOnce(Buffer.from('child-hash\n')),
       exists: jest.fn().mockResolvedValue(true),
     });
+    const refStore = new RefStore(fileSystem, gitPaths);
     const child = new CommitObject({
       tree: 'tree-child',
       parent: 'parent-hash',
@@ -81,7 +84,7 @@ describe('Log', () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(logger, 'info');
 
-    await new Log(fileSystem, objectStore, gitPaths, logger).execute();
+    await new Log(objectStore, refStore, logger).execute();
 
     expect(objectStore.read).toHaveBeenCalledWith('child-hash');
     expect(objectStore.read).toHaveBeenCalledWith('parent-hash');
@@ -96,6 +99,7 @@ describe('Log', () => {
     const fileSystem = createFileSystem({
       read: jest.fn().mockResolvedValue(Buffer.from('commit-hash\n')),
     });
+    const refStore = new RefStore(fileSystem, gitPaths);
     const objectStore: IObjectStore = {
       save: jest.fn(),
       read: jest.fn(),
@@ -103,7 +107,7 @@ describe('Log', () => {
     };
 
     await expect(
-      new Log(fileSystem, objectStore, gitPaths, new Logger()).execute(),
+      new Log(objectStore, refStore, new Logger()).execute(),
     ).rejects.toThrow('Detached HEAD not supported');
   });
 });

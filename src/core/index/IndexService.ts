@@ -1,5 +1,5 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { IIndexService } from './IIndexService';
 
 export class IndexService implements IIndexService {
@@ -7,7 +7,7 @@ export class IndexService implements IIndexService {
 
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: GitPaths,
+    private readonly gitPaths: RepositoryPaths,
   ) {}
 
   public add(filePath: string, hash: string): IIndexService {

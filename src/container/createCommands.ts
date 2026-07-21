@@ -32,18 +32,9 @@ export const createCommands = (services: Services): Commands => {
     services.hashService,
   );
   const writeTree = new WriteTree(services.objectStore);
-  const commitTree = new CommitTree(
-    services.fileSystem,
-    services.objectStore,
-    services.gitPath,
-  );
+  const commitTree = new CommitTree(services.objectStore, services.refStore);
   const commit = new Commit(writeTree, commitTree, services.index);
-  const log = new Log(
-    services.fileSystem,
-    services.objectStore,
-    services.gitPath,
-    services.logger,
-  );
+  const log = new Log(services.objectStore, services.refStore, services.logger);
 
   return {
     init,

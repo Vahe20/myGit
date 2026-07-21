@@ -1,6 +1,6 @@
-import { IFileSystem } from '../../utils/fs/IFileSystem';
-import { FileScanner } from '../../utils/scanner/FileScanner';
-import { IHashService } from '../hashing/IHashService';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IHashService } from '../../infrastructure/hashing/IHashService';
+import { FileScanner } from '../../services/fileScanner/FileScanner';
 import { IIndexService } from '../index/IIndexService';
 import { Status } from './Status';
 

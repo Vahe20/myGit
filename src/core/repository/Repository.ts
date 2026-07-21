@@ -1,10 +1,10 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 
 export class Repository {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: GitPaths,
+    private readonly gitPaths: RepositoryPaths,
   ) {}
 
   async init(): Promise<void> {

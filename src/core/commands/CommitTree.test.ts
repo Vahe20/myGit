@@ -1,7 +1,8 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { RepositoryPaths } from '../../configs/RepositoryPaths';
+import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { CommitObject } from '../objects/CommitObject';
-import { IObjectStore } from '../objects/IObjectStore';
+import { RefStore } from '../refs/RefStore';
 import { CommitTree } from './CommitTree';
 
 const createFileSystem = (
@@ -17,14 +18,15 @@ const createFileSystem = (
 });
 
 describe('CommitTree', () => {
-  const gitPaths = new GitPaths('/repo');
-  const branchPath = `${gitPaths.myGit()}/refs/heads/main`;
+  const gitPaths = new RepositoryPaths('/repo');
+  const branchPath = gitPaths.ref('refs/heads/main');
 
   it('creates an initial commit and updates the current branch', async () => {
     const fileSystem = createFileSystem({
       read: jest.fn().mockResolvedValue(Buffer.from('ref: refs/heads/main\n')),
       exists: jest.fn().mockResolvedValue(false),
     });
+    const refStore = new RefStore(fileSystem, gitPaths);
     const objectStore: IObjectStore = {
       save: jest.fn().mockResolvedValue('commit-hash'),
       read: jest.fn(),
@@ -32,7 +34,7 @@ describe('CommitTree', () => {
     };
 
     await expect(
-      new CommitTree(fileSystem, objectStore, gitPaths).execute(
+      new CommitTree(objectStore, refStore).execute(
         'tree-hash',
         'initial commit',
       ),
@@ -56,16 +58,18 @@ describe('CommitTree', () => {
       read: jest
         .fn()
         .mockResolvedValueOnce(Buffer.from('ref: refs/heads/main\n'))
-        .mockResolvedValueOnce(Buffer.from('parent-hash\n')),
+        .mockResolvedValueOnce(Buffer.from('parent-hash\n'))
+        .mockResolvedValueOnce(Buffer.from('ref: refs/heads/main\n')),
       exists: jest.fn().mockResolvedValue(true),
     });
+    const refStore = new RefStore(fileSystem, gitPaths);
     const objectStore: IObjectStore = {
       save: jest.fn().mockResolvedValue('commit-hash'),
       read: jest.fn(),
       buildPath: jest.fn(),
     };
 
-    await new CommitTree(fileSystem, objectStore, gitPaths).execute(
+    await new CommitTree(objectStore, refStore).execute(
       'tree-hash',
       'next commit',
     );
@@ -84,6 +88,7 @@ describe('CommitTree', () => {
     const fileSystem = createFileSystem({
       read: jest.fn().mockResolvedValue(Buffer.from('commit-hash\n')),
     });
+    const refStore = new RefStore(fileSystem, gitPaths);
     const objectStore: IObjectStore = {
       save: jest.fn(),
       read: jest.fn(),
@@ -91,10 +96,7 @@ describe('CommitTree', () => {
     };
 
     await expect(
-      new CommitTree(fileSystem, objectStore, gitPaths).execute(
-        'tree-hash',
-        'message',
-      ),
+      new CommitTree(objectStore, refStore).execute('tree-hash', 'message'),
     ).rejects.toThrow('Detached HEAD not supported');
   });
 });

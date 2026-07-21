@@ -1,8 +1,8 @@
 import path from 'node:path';
 
-export class GitPaths {
+export class RepositoryPaths {
   private basePath: string;
-  private myGitPaht: string;
+  private myGitPath: string;
   private ignorePath: string;
   private objectsPath: string;
   private refsPath: string;
@@ -12,19 +12,23 @@ export class GitPaths {
   constructor(basePath: string) {
     this.basePath = basePath;
     this.ignorePath = path.join(basePath, '.mygitignore');
-    this.myGitPaht = path.join(basePath, '.mygit');
-    this.objectsPath = path.join(this.myGitPaht, 'objects');
-    this.refsPath = path.join(this.myGitPaht, 'refs');
-    this.headPath = path.join(this.myGitPaht, 'HEAD');
-    this.indexPath = path.join(this.myGitPaht, 'index');
+    this.myGitPath = path.join(basePath, '.mygit');
+    this.objectsPath = path.join(this.myGitPath, 'objects');
+    this.refsPath = path.join(this.myGitPath, 'refs');
+    this.headPath = path.join(this.myGitPath, 'HEAD');
+    this.indexPath = path.join(this.myGitPath, 'index');
   }
 
   base(): string {
     return this.basePath;
   }
 
+  ref(ref: string): string {
+    return path.join(this.myGitPath, ref);
+  }
+
   myGit(): string {
-    return this.myGitPaht;
+    return this.myGitPath;
   }
 
   ignore(): string {

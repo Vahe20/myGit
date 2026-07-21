@@ -1,36 +1,18 @@
-import { GitPaths } from '../../configs/GitPaths';
-import { IFileSystem } from '../../utils/fs/IFileSystem';
+import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { Logger } from '../../utils/logger/Logger';
 import { CommitObject } from '../objects/CommitObject';
-import { IObjectStore } from '../objects/IObjectStore';
+import { RefStore } from '../refs/RefStore';
 import { ICommand } from './ICommand';
 
 export class Log implements ICommand {
   constructor(
-    private readonly fileSystem: IFileSystem,
     private readonly objectStore: IObjectStore,
-    private readonly gitPaths: GitPaths,
+    private readonly refStore: RefStore,
     private readonly logger: Logger,
   ) {}
 
   public async execute(): Promise<void> {
-    const head = (await this.fileSystem.read(this.gitPaths.head()))
-      .toString()
-      .trim();
-
-    if (!head.startsWith('ref:')) {
-      throw new Error('Detached HEAD not supported');
-    }
-
-    const ref = head.split(' ')[1];
-
-    const branchPath = this.gitPaths.myGit() + '/' + ref;
-
-    if (!(await this.fileSystem.exists(branchPath))) {
-      return;
-    }
-
-    let commitHash = (await this.fileSystem.read(branchPath)).toString().trim();
+    let commitHash = await this.refStore.getCurrentCommit();
 
     while (commitHash) {
       const data = await this.objectStore.read(commitHash);
@@ -46,7 +28,7 @@ export class Log implements ICommand {
       this.logger.info('\t' + commit.message);
       console.log();
 
-      commitHash = commit.parent ?? '';
+      commitHash = commit.parent;
     }
   }
 }
