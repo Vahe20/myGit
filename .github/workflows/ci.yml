@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # скачать репозиторий
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      # установить Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+
+      # установить зависимости
+      - name: Install dependencies
+        run: npm ci
+
+
+      # ESLint
+      - name: Lint
+        run: npm run lint:fix
+
+
+      # Jest
+      - name: Test
+        run: npm test
+
+
+      # TypeScript build
+      - name: Build
+        run: npm run build
