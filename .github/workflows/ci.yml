@@ -11,39 +11,68 @@ on:
 
 
 jobs:
-  test:
-
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
-      # скачать репозиторий
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-
-      # установить Node
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
 
-
-      # установить зависимости
       - name: Install dependencies
         run: npm ci
 
-
-      # ESLint
-      - name: Lint
-        run: npm run lint:fix
+      - name: Run ESLint
+        run: npm run lint
 
 
-      # Jest
-      - name: Test
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
         run: npm test
 
 
-      # TypeScript build
-      - name: Build
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    needs:
+      - lint
+      - test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
         run: npm run build
