@@ -1,5 +1,5 @@
 import { RepositoryPaths } from '../configs/RepositoryPaths';
-import { IndexService } from '../core/index/IndexService';
+import { IndexService } from '../core/indexService/IndexService';
 import { RefStore } from '../core/refs/RefStore';
 import { Repository } from '../core/repository/Repository';
 import { ZlibCompressionService } from '../infrastructure/compression/ZlibCompressionService';
@@ -11,7 +11,7 @@ import { Logger } from '../utils/logger/Logger';
 
 export interface Services {
   logger: Logger;
-  gitPath: RepositoryPaths;
+  repositoryPaths: RepositoryPaths;
   fileSystem: FileSystem;
   scanner: FileScanner;
   hashService: SHA1HashService;
@@ -24,25 +24,25 @@ export interface Services {
 
 export const createServices = (): Services => {
   const logger = new Logger();
-  const gitPath = new RepositoryPaths(process.cwd());
+  const repositoryPaths = new RepositoryPaths(process.cwd());
   const fileSystem = new FileSystem();
-  const scanner = new FileScanner(fileSystem, gitPath);
+  const scanner = new FileScanner(fileSystem, repositoryPaths);
   const hashService = new SHA1HashService();
   const compressionService = new ZlibCompressionService();
-  const index = new IndexService(fileSystem, gitPath);
-  const repository = new Repository(fileSystem, gitPath);
-  const refStore = new RefStore(fileSystem, gitPath);
+  const index = new IndexService(fileSystem, repositoryPaths);
+  const repository = new Repository(fileSystem, repositoryPaths);
+  const refStore = new RefStore(fileSystem, repositoryPaths);
 
   const objectStore = new ObjectStore(
     fileSystem,
     hashService,
     compressionService,
-    gitPath,
+    repositoryPaths,
   );
 
   return {
     logger,
-    gitPath,
+    repositoryPaths,
     fileSystem,
     scanner,
     hashService,

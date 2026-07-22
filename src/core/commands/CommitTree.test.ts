@@ -10,6 +10,7 @@ const createFileSystem = (
 ): IFileSystem => ({
   read: jest.fn(),
   write: jest.fn(),
+  delete: jest.fn(),
   exists: jest.fn(),
   createDir: jest.fn(),
   list: jest.fn(),
@@ -18,15 +19,15 @@ const createFileSystem = (
 });
 
 describe('CommitTree', () => {
-  const gitPaths = new RepositoryPaths('/repo');
-  const branchPath = gitPaths.ref('refs/heads/main');
+  const repositoryPaths = new RepositoryPaths('/repo');
+  const branchPath = repositoryPaths.ref('refs/heads/main');
 
   it('creates an initial commit and updates the current branch', async () => {
     const fileSystem = createFileSystem({
       read: jest.fn().mockResolvedValue(Buffer.from('ref: refs/heads/main\n')),
       exists: jest.fn().mockResolvedValue(false),
     });
-    const refStore = new RefStore(fileSystem, gitPaths);
+    const refStore = new RefStore(fileSystem, repositoryPaths);
     const objectStore: IObjectStore = {
       save: jest.fn().mockResolvedValue('commit-hash'),
       read: jest.fn(),
@@ -62,7 +63,7 @@ describe('CommitTree', () => {
         .mockResolvedValueOnce(Buffer.from('ref: refs/heads/main\n')),
       exists: jest.fn().mockResolvedValue(true),
     });
-    const refStore = new RefStore(fileSystem, gitPaths);
+    const refStore = new RefStore(fileSystem, repositoryPaths);
     const objectStore: IObjectStore = {
       save: jest.fn().mockResolvedValue('commit-hash'),
       read: jest.fn(),
@@ -88,7 +89,7 @@ describe('CommitTree', () => {
     const fileSystem = createFileSystem({
       read: jest.fn().mockResolvedValue(Buffer.from('commit-hash\n')),
     });
-    const refStore = new RefStore(fileSystem, gitPaths);
+    const refStore = new RefStore(fileSystem, repositoryPaths);
     const objectStore: IObjectStore = {
       save: jest.fn(),
       read: jest.fn(),

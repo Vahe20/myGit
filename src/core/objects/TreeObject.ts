@@ -27,4 +27,32 @@ export class TreeObject implements IGitObject {
   private getMode(type: TreeEntry['type']): string {
     return type === 'tree' ? '040000' : '100644';
   }
+
+  public static parse(data: Buffer): TreeEntry[] {
+    const entries: TreeEntry[] = [];
+
+    let offset = data.indexOf(0) + 1;
+
+    while (offset < data.length) {
+      const space = data.indexOf(0x20, offset);
+
+      const mode = data.toString('utf8', offset, space);
+
+      const nullByte = data.indexOf(0, space + 1);
+
+      const name = data.toString('utf8', space + 1, nullByte);
+
+      const hash = data.subarray(nullByte + 1, nullByte + 21).toString('hex');
+
+      entries.push({
+        type: mode === '040000' ? 'tree' : 'blob',
+        name,
+        hash,
+      });
+
+      offset = nullByte + 21;
+    }
+
+    return entries;
+  }
 }

@@ -2,12 +2,14 @@ import { PathNormalizer } from './PathNormalizer';
 
 describe('PathNormalizer', () => {
   it('converts backslashes to forward slashes', () => {
-    expect(PathNormalizer('src\\core\\index.ts')).toBe('src/core/index.ts');
+    expect(PathNormalizer('src\\core\\indexService.ts')).toBe(
+      'src/core/indexService.ts',
+    );
   });
 
   it('removes a leading current-directory segment', () => {
-    expect(PathNormalizer('./src/index.ts')).toBe('src/index.ts');
-    expect(PathNormalizer('/src/index.ts')).toBe('src/index.ts');
+    expect(PathNormalizer('./src/indexService.ts')).toBe('src/indexService.ts');
+    expect(PathNormalizer('/src/indexService.ts')).toBe('src/indexService.ts');
   });
 
   it('collapses duplicate slashes and removes trailing slash', () => {

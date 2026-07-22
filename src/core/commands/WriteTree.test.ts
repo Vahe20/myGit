@@ -1,9 +1,9 @@
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { IIndexService } from '../index/IIndexService';
+import { IIndexService } from '../indexService/IIndexService';
 import { WriteTree } from './WriteTree';
 
 describe('WriteTree', () => {
-  it('should create tree object from index', async () => {
+  it('should create tree object from indexService', async () => {
     const saveMock = jest.fn().mockResolvedValue('tree-hash');
 
     const objectStore: IObjectStore = {
@@ -15,6 +15,7 @@ describe('WriteTree', () => {
     const index: IIndexService = {
       add: jest.fn().mockReturnThis(),
       get: jest.fn(),
+      has: jest.fn(),
       remove: jest.fn().mockReturnThis(),
       save: jest.fn().mockResolvedValue(undefined),
       load: jest.fn(),

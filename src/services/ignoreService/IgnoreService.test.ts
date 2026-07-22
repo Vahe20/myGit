@@ -7,6 +7,7 @@ const createFileSystem = (
 ): IFileSystem => ({
   read: jest.fn(),
   write: jest.fn(),
+  delete: jest.fn(),
   exists: jest.fn(),
   createDir: jest.fn(),
   list: jest.fn(),
@@ -15,7 +16,7 @@ const createFileSystem = (
 });
 
 describe('IgnoreService', () => {
-  const gitPaths = new RepositoryPaths('/repo');
+  const repositoryPaths = new RepositoryPaths('/repo');
 
   it('returns an empty list when ignore file is missing', async () => {
     const fileSystem = createFileSystem({
@@ -23,7 +24,7 @@ describe('IgnoreService', () => {
     });
 
     await expect(
-      new IgnoreService(fileSystem, gitPaths).loadRules(),
+      new IgnoreService(fileSystem, repositoryPaths).loadRules(),
     ).resolves.toEqual([]);
     expect(fileSystem.read).not.toHaveBeenCalled();
   });
@@ -39,7 +40,7 @@ describe('IgnoreService', () => {
     });
 
     await expect(
-      new IgnoreService(fileSystem, gitPaths).loadRules(),
+      new IgnoreService(fileSystem, repositoryPaths).loadRules(),
     ).resolves.toMatchObject([
       { pattern: 'node_modules', directoryOnly: false, hasSlash: false },
       { pattern: 'dist', directoryOnly: true, hasSlash: false },
@@ -51,7 +52,7 @@ describe('IgnoreService', () => {
     const fileSystem = createFileSystem({
       exists: jest.fn().mockResolvedValue(false),
     });
-    const ignoreService = new IgnoreService(fileSystem, gitPaths);
+    const ignoreService = new IgnoreService(fileSystem, repositoryPaths);
 
     await expect(ignoreService.isIgnored('.mygit')).resolves.toBe(true);
     await expect(ignoreService.isIgnored('.mygit/HEAD')).resolves.toBe(true);
@@ -62,7 +63,7 @@ describe('IgnoreService', () => {
       exists: jest.fn().mockResolvedValue(true),
       read: jest.fn().mockResolvedValue(Buffer.from('node_modules\n')),
     });
-    const ignoreService = new IgnoreService(fileSystem, gitPaths);
+    const ignoreService = new IgnoreService(fileSystem, repositoryPaths);
 
     await expect(ignoreService.isIgnored('node_modules')).resolves.toBe(true);
     await expect(
@@ -78,7 +79,7 @@ describe('IgnoreService', () => {
       exists: jest.fn().mockResolvedValue(true),
       read: jest.fn().mockResolvedValue(Buffer.from('dist/\n')),
     });
-    const ignoreService = new IgnoreService(fileSystem, gitPaths);
+    const ignoreService = new IgnoreService(fileSystem, repositoryPaths);
 
     await expect(ignoreService.isIgnored('dist')).resolves.toBe(true);
     await expect(ignoreService.isIgnored('dist/app.js')).resolves.toBe(true);
@@ -93,7 +94,7 @@ describe('IgnoreService', () => {
       exists: jest.fn().mockResolvedValue(true),
       read: jest.fn().mockResolvedValue(Buffer.from('*.log\nsrc/*.tmp\n')),
     });
-    const ignoreService = new IgnoreService(fileSystem, gitPaths);
+    const ignoreService = new IgnoreService(fileSystem, repositoryPaths);
 
     await expect(ignoreService.isIgnored('debug.log')).resolves.toBe(true);
     await expect(ignoreService.isIgnored('logs/debug.log')).resolves.toBe(true);
@@ -108,7 +109,7 @@ describe('IgnoreService', () => {
       exists: jest.fn().mockResolvedValue(true),
       read: jest.fn().mockResolvedValue(Buffer.from('*.log\n')),
     });
-    const ignoreService = new IgnoreService(fileSystem, gitPaths);
+    const ignoreService = new IgnoreService(fileSystem, repositoryPaths);
 
     await ignoreService.isIgnored('a.log');
     await ignoreService.isIgnored('b.log');

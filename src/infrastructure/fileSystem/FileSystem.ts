@@ -31,6 +31,15 @@ export class FileSystem implements IFileSystem {
     await fs.writeFile(filePath, data);
   }
 
+  public async delete(location: string): Promise<void> {
+    const stat = await this.stat(location);
+    if (stat.isFile) {
+      await fs.rm(location);
+    } else {
+      await fs.rmdir(location);
+    }
+  }
+
   public async list(dirPath: string): Promise<string[]> {
     const files: string[] = [];
     try {
@@ -45,8 +54,8 @@ export class FileSystem implements IFileSystem {
 
     return files;
   }
-  public async stat(path: string): Promise<FileInfo> {
-    const stats = await fs.stat(path);
+  public async stat(location: string): Promise<FileInfo> {
+    const stats = await fs.stat(location);
 
     return {
       isFile: stats.isFile(),

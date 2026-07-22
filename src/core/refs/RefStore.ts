@@ -1,13 +1,14 @@
 import { RepositoryPaths } from '../../configs/RepositoryPaths';
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
+import { IRefStore } from './IRefStore';
 
-export class RefStore {
+export class RefStore implements IRefStore {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: RepositoryPaths,
+    private readonly repositoryPaths: RepositoryPaths,
   ) {}
   async getHeadRef(): Promise<string> {
-    const head = (await this.fileSystem.read(this.gitPaths.head()))
+    const head = (await this.fileSystem.read(this.repositoryPaths.head()))
       .toString()
       .trim();
 
@@ -20,7 +21,7 @@ export class RefStore {
   async getCurrentCommit(): Promise<string | undefined> {
     const ref = await this.getHeadRef();
 
-    const branchPath = this.gitPaths.ref(ref);
+    const branchPath = this.repositoryPaths.ref(ref);
 
     if (!(await this.fileSystem.exists(branchPath))) {
       return undefined;
@@ -31,7 +32,7 @@ export class RefStore {
   async updateCurrentBranch(hash: string): Promise<void> {
     const ref = await this.getHeadRef();
 
-    const branchPath = this.gitPaths.ref(ref);
+    const branchPath = this.repositoryPaths.ref(ref);
 
     await this.fileSystem.write(branchPath, Buffer.from(hash));
   }

@@ -1,7 +1,7 @@
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { FileScanner } from '../../services/fileScanner/FileScanner';
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { IIndexService } from '../index/IIndexService';
+import { IIndexService } from '../indexService/IIndexService';
 import { Add } from './Add';
 
 const createFileSystem = (): IFileSystem => ({
@@ -9,6 +9,7 @@ const createFileSystem = (): IFileSystem => ({
   write: jest.fn(),
   exists: jest.fn(),
   createDir: jest.fn(),
+  delete: jest.fn(),
   list: jest.fn(),
   stat: jest.fn(),
 });
@@ -17,6 +18,7 @@ const createIndex = (): IIndexService => {
   const index: IIndexService = {
     add: jest.fn().mockReturnThis(),
     get: jest.fn(),
+    has: jest.fn(),
     remove: jest.fn().mockReturnThis(),
     save: jest.fn().mockResolvedValue(undefined),
     load: jest.fn(),
@@ -29,7 +31,7 @@ const createIndex = (): IIndexService => {
 };
 
 describe('Add', () => {
-  it('adds one file to the object store and index', async () => {
+  it('adds one file to the object store and indexService', async () => {
     const fileSystem = createFileSystem();
     const scanner = { scan: jest.fn() } as unknown as FileScanner;
     const objectStore: IObjectStore = {

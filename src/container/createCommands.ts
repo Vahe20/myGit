@@ -3,6 +3,7 @@ import { Commit } from '../core/commands/Commit';
 import { CommitTree } from '../core/commands/CommitTree';
 import { Init } from '../core/commands/Init';
 import { Log } from '../core/commands/Log';
+import { Rm } from '../core/commands/Rm';
 import { Status } from '../core/commands/Status';
 import { WriteTree } from '../core/commands/WriteTree';
 import { Services } from './createServices';
@@ -15,6 +16,7 @@ export interface Commands {
   'commit-tree': CommitTree;
   commit: Commit;
   log: Log;
+  rm: Rm;
 }
 
 export const createCommands = (services: Services): Commands => {
@@ -30,11 +32,14 @@ export const createCommands = (services: Services): Commands => {
     services.scanner,
     services.index,
     services.hashService,
+    services.objectStore,
+    services.refStore,
   );
   const writeTree = new WriteTree(services.objectStore);
   const commitTree = new CommitTree(services.objectStore, services.refStore);
   const commit = new Commit(writeTree, commitTree, services.index);
   const log = new Log(services.objectStore, services.refStore, services.logger);
+  const rm = new Rm(services.fileSystem, services.index);
 
   return {
     init,
@@ -44,5 +49,6 @@ export const createCommands = (services: Services): Commands => {
     'commit-tree': commitTree,
     commit,
     log,
+    rm,
   };
 };

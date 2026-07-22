@@ -1,4 +1,5 @@
 import { createContainer } from '../container/createContainer';
+import { statusLog } from '../utils/logger/statusLog';
 import { PathNormalizer } from '../utils/normalizer/PathNormalizer';
 import { argsParser } from './argsParser';
 
@@ -19,46 +20,33 @@ const main = async () => {
     }
 
     case 'add': {
-      const targetPath = PathNormalizer(cli.args[0]);
+      const rawPath = cli.args[0];
 
-      if (!targetPath) {
+      if (!rawPath) {
         throw new Error('File path is required');
       }
 
-      await commands.add.execute(targetPath);
+      await commands.add.execute(PathNormalizer(rawPath));
+
+      break;
+    }
+
+    case 'rm': {
+      const rawPath = cli.args[0];
+
+      if (!rawPath) {
+        throw new Error('File path is required');
+      }
+
+      await commands.rm.execute(PathNormalizer(rawPath));
 
       break;
     }
 
     case 'status': {
-      const { staged, modified, untracked } = await commands.status.execute();
+      const status = await commands.status.execute();
 
-      services.logger.info(
-        '\nChanges to be committed:\n' +
-          '\t(use \\"git restore --staged <file>...\\" to unstage)',
-      );
-
-      staged.forEach((value) => {
-        services.logger.success('\t' + value.path);
-      });
-
-      services.logger.info(
-        '\nChanges not staged for commit:\n' +
-          '\t(use \\"git restore --staged <file>...\\" to unstage)',
-      );
-
-      modified.forEach((value) => {
-        services.logger.warn('\t' + value.path);
-      });
-
-      services.logger.info(
-        '\nUntracked files:\n' +
-          '\t(use \\"git add <file>...\\" to include in what will be committed)',
-      );
-
-      untracked.forEach((value) => {
-        services.logger.error('\t' + value.path);
-      });
+      statusLog(services.logger, status);
       break;
     }
 

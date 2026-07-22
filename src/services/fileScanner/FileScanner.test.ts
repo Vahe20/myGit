@@ -12,16 +12,17 @@ const directory = (): FileInfo => ({ isFile: false, isDirectory: true });
 
 describe('FileScanner', () => {
   const root = path.resolve('/repo');
-  const gitPaths = new RepositoryPaths(root);
+  const repositoryPaths = new RepositoryPaths(root);
 
   it('returns files recursively using normalized relative paths', async () => {
     const srcDir = path.join(root, 'src');
-    const nestedFile = path.join(srcDir, 'index.ts');
+    const nestedFile = path.join(srcDir, 'indexService.ts');
     const rootFile = path.join(root, 'README.md');
 
     const fileSystem: IFileSystem = {
       read: jest.fn().mockResolvedValue(Buffer.from('')),
       write: jest.fn(),
+      delete: jest.fn(),
       exists: jest.fn().mockResolvedValue(false),
       createDir: jest.fn(),
       list: jest.fn(async (dirPath: string) => {
@@ -44,9 +45,9 @@ describe('FileScanner', () => {
       }),
     };
 
-    await expect(new FileScanner(fileSystem, gitPaths).scan()).resolves.toEqual(
-      ['src/index.ts', 'README.md'],
-    );
+    await expect(
+      new FileScanner(fileSystem, repositoryPaths).scan(),
+    ).resolves.toEqual(['src/indexService.ts', 'README.md']);
   });
 
   it('skips .mygit and exact paths from ignoreService rules', async () => {
@@ -57,15 +58,16 @@ describe('FileScanner', () => {
     const fileSystem: IFileSystem = {
       read: jest.fn().mockResolvedValue(Buffer.from('dist.js\n')),
       write: jest.fn(),
+      delete: jest.fn(),
       exists: jest.fn().mockResolvedValue(true),
       createDir: jest.fn(),
       list: jest.fn().mockResolvedValue([myGitDir, ignoredFile, trackedFile]),
       stat: jest.fn().mockResolvedValue(file()),
     };
 
-    await expect(new FileScanner(fileSystem, gitPaths).scan()).resolves.toEqual(
-      ['src.ts'],
-    );
+    await expect(
+      new FileScanner(fileSystem, repositoryPaths).scan(),
+    ).resolves.toEqual(['src.ts']);
     expect(fileSystem.stat).toHaveBeenCalledTimes(1);
     expect(fileSystem.stat).toHaveBeenCalledWith(trackedFile);
   });

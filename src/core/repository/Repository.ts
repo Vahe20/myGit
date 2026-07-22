@@ -4,15 +4,15 @@ import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 export class Repository {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: RepositoryPaths,
+    private readonly repositoryPaths: RepositoryPaths,
   ) {}
 
   async init(): Promise<void> {
-    const myGitPath = this.gitPaths.myGit();
-    const objectPath = this.gitPaths.objects();
-    const refsPath = this.gitPaths.refs();
-    const headPath = this.gitPaths.head();
-    const indexPath = this.gitPaths.index();
+    const myGitPath = this.repositoryPaths.myGit();
+    const objectPath = this.repositoryPaths.objects();
+    const refsPath = this.repositoryPaths.refs();
+    const headPath = this.repositoryPaths.head();
+    const indexPath = this.repositoryPaths.index();
 
     await this.fileSystem.createDir(myGitPath);
     await this.fileSystem.createDir(objectPath);

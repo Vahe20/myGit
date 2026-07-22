@@ -11,7 +11,7 @@ export class ObjectStore implements IObjectStore {
     private readonly fileSystem: IFileSystem,
     private readonly hashService: IHashService,
     private readonly compression: ICompressionService,
-    private readonly gitPaths: RepositoryPaths,
+    private readonly repositoryPaths: RepositoryPaths,
   ) {}
 
   public async save(data: Buffer): Promise<string> {
@@ -34,7 +34,7 @@ export class ObjectStore implements IObjectStore {
   }
 
   public buildPath(hash: string): string {
-    const objectsPath = this.gitPaths.objects();
+    const objectsPath = this.repositoryPaths.objects();
     return path.join(objectsPath, hash.replace(/^(.{2})/, '$1/'));
   }
 }

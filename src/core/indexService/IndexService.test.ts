@@ -7,6 +7,7 @@ const createFileSystem = (
 ): IFileSystem => ({
   read: jest.fn(),
   write: jest.fn(),
+  delete: jest.fn(),
   exists: jest.fn(),
   createDir: jest.fn(),
   list: jest.fn(),
@@ -15,10 +16,10 @@ const createFileSystem = (
 });
 
 describe('IndexService', () => {
-  const gitPaths = new RepositoryPaths('/repo');
+  const repositoryPaths = new RepositoryPaths('/repo');
 
-  it('adds, gets, removes, and returns a copy of index entries', () => {
-    const index = new IndexService(createFileSystem(), gitPaths);
+  it('adds, gets, removes, and returns a copy of indexService entries', () => {
+    const index = new IndexService(createFileSystem(), repositoryPaths);
 
     expect(index.add('a.txt', 'hash-a')).toBe(index);
     expect(index.get('a.txt')).toBe('hash-a');
@@ -31,27 +32,30 @@ describe('IndexService', () => {
     expect(index.get('a.txt')).toBeUndefined();
   });
 
-  it('saves entries as json to the index path', async () => {
+  it('saves entries as json to the indexService path', async () => {
     const fileSystem = createFileSystem({
       write: jest.fn().mockResolvedValue(undefined),
     });
-    const index = new IndexService(fileSystem, gitPaths).add('a.txt', 'hash-a');
+    const index = new IndexService(fileSystem, repositoryPaths).add(
+      'a.txt',
+      'hash-a',
+    );
 
     await expect(index.save()).resolves.toBe(index);
 
     expect(fileSystem.write).toHaveBeenCalledWith(
-      gitPaths.index(),
+      repositoryPaths.index(),
       Buffer.from(JSON.stringify([['a.txt', 'hash-a']], null, 2)),
     );
   });
 
-  it('loads existing index entries', async () => {
+  it('loads existing indexService entries', async () => {
     const index = new IndexService(
       createFileSystem({
         exists: jest.fn().mockResolvedValue(true),
         read: jest.fn().mockResolvedValue(Buffer.from('[["a.txt","hash-a"]]')),
       }),
-      gitPaths,
+      repositoryPaths,
     );
 
     await index.load();
@@ -59,12 +63,12 @@ describe('IndexService', () => {
     expect(index.getAll()).toEqual(new Map([['a.txt', 'hash-a']]));
   });
 
-  it('clears entries when the index file is missing or invalid', async () => {
+  it('clears entries when the indexService file is missing or invalid', async () => {
     const index = new IndexService(
       createFileSystem({
         exists: jest.fn().mockResolvedValue(false),
       }),
-      gitPaths,
+      repositoryPaths,
     ).add('stale.txt', 'hash');
 
     await index.load();
@@ -75,7 +79,7 @@ describe('IndexService', () => {
         exists: jest.fn().mockResolvedValue(true),
         read: jest.fn().mockResolvedValue(Buffer.from('not json')),
       }),
-      gitPaths,
+      repositoryPaths,
     ).add('stale.txt', 'hash');
 
     await invalidIndex.load();

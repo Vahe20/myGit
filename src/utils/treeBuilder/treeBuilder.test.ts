@@ -1,10 +1,11 @@
-import { IIndexService } from '../../core/index/IIndexService';
+import { IIndexService } from '../../core/indexService/IIndexService';
 import { TreeBuilder } from './treeBuilder';
 
 const createIndex = (entries: [string, string][]): IIndexService => {
   const index: IIndexService = {
     add: jest.fn().mockReturnThis(),
     get: jest.fn(),
+    has: jest.fn(),
     remove: jest.fn().mockReturnThis(),
     save: jest.fn().mockResolvedValue(undefined),
     load: jest.fn(),
@@ -17,7 +18,7 @@ const createIndex = (entries: [string, string][]): IIndexService => {
 };
 
 describe('TreeBuilder', () => {
-  it('builds a nested tree from index paths', async () => {
+  it('builds a nested tree from indexService paths', async () => {
     const root = await new TreeBuilder().build(
       createIndex([
         ['src/main.ts', 'hash-main'],

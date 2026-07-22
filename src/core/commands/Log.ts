@@ -1,13 +1,13 @@
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { Logger } from '../../utils/logger/Logger';
 import { CommitObject } from '../objects/CommitObject';
-import { RefStore } from '../refs/RefStore';
+import { IRefStore } from '../refs/IRefStore';
 import { ICommand } from './ICommand';
 
 export class Log implements ICommand {
   constructor(
     private readonly objectStore: IObjectStore,
-    private readonly refStore: RefStore,
+    private readonly refStore: IRefStore,
     private readonly logger: Logger,
   ) {}
 

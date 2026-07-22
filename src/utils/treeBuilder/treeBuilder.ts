@@ -1,4 +1,4 @@
-import { IIndexService } from '../../core/index/IIndexService';
+import { IIndexService } from '../../core/indexService/IIndexService';
 import { TreeNode } from './TreeNode';
 
 export class TreeBuilder {

@@ -11,6 +11,7 @@ const createFileSystem = (
 ): IFileSystem => ({
   read: jest.fn(),
   write: jest.fn(),
+  delete: jest.fn(),
   exists: jest.fn(),
   createDir: jest.fn(),
   list: jest.fn(),
@@ -19,7 +20,7 @@ const createFileSystem = (
 });
 
 describe('ObjectStore', () => {
-  const gitPaths = new RepositoryPaths('/repo');
+  const repositoryPaths = new RepositoryPaths('/repo');
   const hash = 'abcdef1234567890abcdef1234567890abcdef12';
   const data = Buffer.from('blob 5\0hello');
   const compressed = Buffer.from('compressed');
@@ -41,7 +42,12 @@ describe('ObjectStore', () => {
       fileSystem,
       hashService,
       compression,
-      store: new ObjectStore(fileSystem, hashService, compression, gitPaths),
+      store: new ObjectStore(
+        fileSystem,
+        hashService,
+        compression,
+        repositoryPaths,
+      ),
     };
   };
 
@@ -50,7 +56,7 @@ describe('ObjectStore', () => {
 
     expect(store.buildPath(hash)).toBe(
       path.join(
-        gitPaths.objects(),
+        repositoryPaths.objects(),
         'ab/cdef1234567890abcdef1234567890abcdef12',
       ),
     );

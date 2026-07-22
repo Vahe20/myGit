@@ -7,7 +7,7 @@ export class IndexService implements IIndexService {
 
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: RepositoryPaths,
+    private readonly repositoryPaths: RepositoryPaths,
   ) {}
 
   public add(filePath: string, hash: string): IIndexService {
@@ -17,6 +17,10 @@ export class IndexService implements IIndexService {
 
   public get(filePath: string): string | undefined {
     return this.data.get(filePath);
+  }
+
+  public has(filepath: string): boolean {
+    return this.data.has(filepath);
   }
 
   public getAll(): Map<string, string> {
@@ -31,18 +35,23 @@ export class IndexService implements IIndexService {
   public async save(): Promise<IIndexService> {
     const json = JSON.stringify([...this.data.entries()], null, 2);
 
-    await this.fileSystem.write(this.gitPaths.index(), Buffer.from(json));
+    await this.fileSystem.write(
+      this.repositoryPaths.index(),
+      Buffer.from(json),
+    );
 
     return this;
   }
 
   public async load(): Promise<IIndexService> {
-    if (!(await this.fileSystem.exists(this.gitPaths.index()))) {
+    if (!(await this.fileSystem.exists(this.repositoryPaths.index()))) {
       this.data.clear();
       return this;
     }
 
-    const json = (await this.fileSystem.read(this.gitPaths.index())).toString();
+    const json = (
+      await this.fileSystem.read(this.repositoryPaths.index())
+    ).toString();
 
     try {
       const entries = JSON.parse(json) as [string, string][];

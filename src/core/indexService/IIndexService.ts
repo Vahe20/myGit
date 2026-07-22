@@ -3,6 +3,8 @@ export interface IIndexService {
 
   get(filePath: string): string | undefined;
 
+  has(filePath: string): boolean;
+
   remove(filePath: string): IIndexService;
 
   getAll(): Map<string, string>;

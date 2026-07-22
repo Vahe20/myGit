@@ -11,6 +11,7 @@ const createFileSystem = (
 ): IFileSystem => ({
   read: jest.fn(),
   write: jest.fn(),
+  delete: jest.fn(),
   exists: jest.fn(),
   createDir: jest.fn(),
   list: jest.fn(),
@@ -19,7 +20,7 @@ const createFileSystem = (
 });
 
 describe('Log', () => {
-  const gitPaths = new RepositoryPaths('/repo');
+  const repositoryPaths = new RepositoryPaths('/repo');
 
   let consoleSpy: jest.SpiedFunction<typeof console.log>;
 
@@ -36,7 +37,7 @@ describe('Log', () => {
       read: jest.fn().mockResolvedValue(Buffer.from('ref: refs/heads/main\n')),
       exists: jest.fn().mockResolvedValue(false),
     });
-    const refStore = new RefStore(fileSystem, gitPaths);
+    const refStore = new RefStore(fileSystem, repositoryPaths);
     const objectStore: IObjectStore = {
       save: jest.fn(),
       read: jest.fn(),
@@ -60,7 +61,7 @@ describe('Log', () => {
         .mockResolvedValueOnce(Buffer.from('child-hash\n')),
       exists: jest.fn().mockResolvedValue(true),
     });
-    const refStore = new RefStore(fileSystem, gitPaths);
+    const refStore = new RefStore(fileSystem, repositoryPaths);
     const child = new CommitObject({
       tree: 'tree-child',
       parent: 'parent-hash',
@@ -99,7 +100,7 @@ describe('Log', () => {
     const fileSystem = createFileSystem({
       read: jest.fn().mockResolvedValue(Buffer.from('commit-hash\n')),
     });
-    const refStore = new RefStore(fileSystem, gitPaths);
+    const refStore = new RefStore(fileSystem, repositoryPaths);
     const objectStore: IObjectStore = {
       save: jest.fn(),
       read: jest.fn(),

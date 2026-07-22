@@ -9,12 +9,15 @@ import { IFileScanner } from './IFileScanner';
 export class FileScanner implements IFileScanner {
   constructor(
     private readonly fileSystem: IFileSystem,
-    private readonly gitPaths: RepositoryPaths,
-    private readonly ignoreService = new IgnoreService(fileSystem, gitPaths),
+    private readonly repositoryPaths: RepositoryPaths,
+    private readonly ignoreService = new IgnoreService(
+      fileSystem,
+      repositoryPaths,
+    ),
   ) {}
 
   public async scan(): Promise<string[]> {
-    const rootPath = this.gitPaths.base();
+    const rootPath = this.repositoryPaths.base();
     const result: string[] = [];
 
     await this.directoryScan(rootPath, rootPath, result);
