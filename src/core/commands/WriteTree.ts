@@ -1,7 +1,7 @@
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
 import { TreeBuilder } from '../../utils/treeBuilder/treeBuilder';
 import { TreeNode } from '../../utils/treeBuilder/TreeNode';
-import { IIndexService } from '../indexService/IIndexService';
 import { TreeEntry, TreeObject } from '../objects/TreeObject';
 import { ICommand } from './ICommand';
 

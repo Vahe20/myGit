@@ -1,4 +1,7 @@
 import { Add } from '../core/commands/Add';
+import { Branch } from '../core/commands/Branch';
+import { CatFile } from '../core/commands/CatFile';
+import { Checkout } from '../core/commands/Checkout';
 import { Commit } from '../core/commands/Commit';
 import { CommitTree } from '../core/commands/CommitTree';
 import { Init } from '../core/commands/Init';
@@ -17,6 +20,9 @@ export interface Commands {
   commit: Commit;
   log: Log;
   rm: Rm;
+  cutFile: CatFile;
+  branch: Branch;
+  checkout: Checkout;
 }
 
 export const createCommands = (services: Services): Commands => {
@@ -40,6 +46,17 @@ export const createCommands = (services: Services): Commands => {
   const commit = new Commit(writeTree, commitTree, services.index);
   const log = new Log(services.objectStore, services.refStore, services.logger);
   const rm = new Rm(services.fileSystem, services.index);
+  const cutFile = new CatFile(services.objectStore, services.logger);
+  const branch = new Branch(
+    services.fileSystem,
+    services.repositoryPaths,
+    services.refStore,
+  );
+  const checkout = new Checkout(
+    services.refStore,
+    services.objectStore,
+    services.treeRestorer,
+  );
 
   return {
     init,
@@ -50,5 +67,8 @@ export const createCommands = (services: Services): Commands => {
     commit,
     log,
     rm,
+    cutFile,
+    branch,
+    checkout,
   };
 };

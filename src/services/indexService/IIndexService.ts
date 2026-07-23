@@ -9,6 +9,8 @@ export interface IIndexService {
 
   getAll(): Map<string, string>;
 
+  clear(): IIndexService;
+
   save(): Promise<IIndexService>;
 
   load(): Promise<IIndexService>;

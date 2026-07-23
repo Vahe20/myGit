@@ -1,4 +1,4 @@
-import { Logger } from './Logger';
+import { ILogger } from './ILogger';
 
 export interface StatusResult {
   staged: StatusFile[];
@@ -12,7 +12,7 @@ export interface StatusFile {
   hash?: string;
 }
 
-export const statusLog = (logger: Logger, status: StatusResult) => {
+export const statusLog = (logger: ILogger, status: StatusResult) => {
   if (status.staged.length > 0) {
     logger.info(
       '\nChanges to be committed:\n' +

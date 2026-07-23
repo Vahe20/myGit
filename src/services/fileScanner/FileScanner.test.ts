@@ -16,7 +16,7 @@ describe('FileScanner', () => {
 
   it('returns files recursively using normalized relative paths', async () => {
     const srcDir = path.join(root, 'src');
-    const nestedFile = path.join(srcDir, 'indexService.ts');
+    const nestedFile = path.join(srcDir, 'index.ts');
     const rootFile = path.join(root, 'README.md');
 
     const fileSystem: IFileSystem = {
@@ -47,7 +47,7 @@ describe('FileScanner', () => {
 
     await expect(
       new FileScanner(fileSystem, repositoryPaths).scan(),
-    ).resolves.toEqual(['src/indexService.ts', 'README.md']);
+    ).resolves.toEqual(['src/index.ts', 'README.md']);
   });
 
   it('skips .mygit and exact paths from ignoreService rules', async () => {

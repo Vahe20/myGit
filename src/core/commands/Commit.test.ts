@@ -1,4 +1,4 @@
-import { IndexService } from '../indexService/IndexService';
+import { IndexService } from '../../services/indexService/IndexService';
 import { Commit } from './Commit';
 import { CommitTree } from './CommitTree';
 import { WriteTree } from './WriteTree';

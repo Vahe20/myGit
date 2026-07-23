@@ -1,5 +1,5 @@
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { IIndexService } from '../indexService/IIndexService';
 import { WriteTree } from './WriteTree';
 
 describe('WriteTree', () => {
@@ -19,10 +19,10 @@ describe('WriteTree', () => {
       remove: jest.fn().mockReturnThis(),
       save: jest.fn().mockResolvedValue(undefined),
       load: jest.fn(),
-
       getAll: jest
         .fn()
         .mockReturnValue(new Map([['src/main.ts', 'blob-hash']])),
+      clear: jest.fn(),
     };
     jest.mocked(index.load).mockResolvedValue(index);
 

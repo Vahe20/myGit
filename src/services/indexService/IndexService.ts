@@ -27,6 +27,11 @@ export class IndexService implements IIndexService {
     return new Map<string, string>(this.data);
   }
 
+  public clear(): IIndexService {
+    this.data = new Map();
+    return this;
+  }
+
   public remove(filePath: string): IIndexService {
     this.data.delete(filePath);
     return this;

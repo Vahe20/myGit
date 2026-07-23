@@ -1,8 +1,8 @@
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { IHashService } from '../../infrastructure/hashing/IHashService';
 import { IFileScanner } from '../../services/fileScanner/IFileScanner';
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { IIndexService } from '../indexService/IIndexService';
 import { BlobObject } from '../objects/BlobObject';
 import { CommitObject } from '../objects/CommitObject';
 import { TreeObject } from '../objects/TreeObject';

@@ -1,16 +1,18 @@
 import { RepositoryPaths } from '../configs/RepositoryPaths';
-import { IndexService } from '../core/indexService/IndexService';
 import { RefStore } from '../core/refs/RefStore';
 import { Repository } from '../core/repository/Repository';
 import { ZlibCompressionService } from '../infrastructure/compression/ZlibCompressionService';
 import { FileSystem } from '../infrastructure/fileSystem/FileSystem';
 import { SHA1HashService } from '../infrastructure/hashing/SHA1HashService';
 import { FileScanner } from '../services/fileScanner/FileScanner';
+import { IndexService } from '../services/indexService/IndexService';
 import { ObjectStore } from '../services/objectStore/ObjectStore';
+import { TreeRestorer } from '../services/treeRestorer/TreeRestorer';
+import { ILogger } from '../utils/logger/ILogger';
 import { Logger } from '../utils/logger/Logger';
 
 export interface Services {
-  logger: Logger;
+  logger: ILogger;
   repositoryPaths: RepositoryPaths;
   fileSystem: FileSystem;
   scanner: FileScanner;
@@ -20,6 +22,7 @@ export interface Services {
   objectStore: ObjectStore;
   repository: Repository;
   refStore: RefStore;
+  treeRestorer: TreeRestorer;
 }
 
 export const createServices = (): Services => {
@@ -29,7 +32,7 @@ export const createServices = (): Services => {
   const scanner = new FileScanner(fileSystem, repositoryPaths);
   const hashService = new SHA1HashService();
   const compressionService = new ZlibCompressionService();
-  const index = new IndexService(fileSystem, repositoryPaths);
+  const indexService = new IndexService(fileSystem, repositoryPaths);
   const repository = new Repository(fileSystem, repositoryPaths);
   const refStore = new RefStore(fileSystem, repositoryPaths);
 
@@ -40,6 +43,8 @@ export const createServices = (): Services => {
     repositoryPaths,
   );
 
+  const treeRestorer = new TreeRestorer(fileSystem, objectStore, indexService);
+
   return {
     logger,
     repositoryPaths,
@@ -47,9 +52,10 @@ export const createServices = (): Services => {
     scanner,
     hashService,
     compressionService,
-    index,
+    index: indexService,
     objectStore,
     repository,
     refStore,
+    treeRestorer,
   };
 };

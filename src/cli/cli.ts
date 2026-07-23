@@ -78,6 +78,39 @@ const main = async () => {
       break;
     }
 
+    case 'cat-file': {
+      const rawPath = cli.args[0];
+
+      if (!rawPath) {
+        throw new Error('File path is required');
+      }
+
+      await commands.cutFile.execute(rawPath);
+      break;
+    }
+
+    case 'branch': {
+      const name = cli.args[0];
+
+      if (!name) {
+        throw new Error('File path is required');
+      }
+
+      await commands.branch.execute(name);
+      break;
+    }
+
+    case 'checkout': {
+      const branch = cli.args[0];
+
+      if (!branch) {
+        throw new Error('File path is required');
+      }
+
+      await commands.checkout.execute(branch);
+      break;
+    }
+
     case 'log': {
       await commands.log.execute();
       break;
@@ -90,4 +123,7 @@ const main = async () => {
   }
 };
 
-main().catch(console.error);
+main().catch((error) => {
+  console.log(error.message);
+  process.exit(1);
+});

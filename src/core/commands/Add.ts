@@ -1,7 +1,7 @@
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { IFileScanner } from '../../services/fileScanner/IFileScanner';
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { IIndexService } from '../indexService/IIndexService';
 import { BlobObject } from '../objects/BlobObject';
 import { ICommand } from './ICommand';
 

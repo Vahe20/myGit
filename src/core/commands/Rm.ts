@@ -1,5 +1,5 @@
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
-import { IIndexService } from '../indexService/IIndexService';
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { ICommand } from './ICommand';
 
 export class Rm implements ICommand<void, [string]> {

@@ -18,6 +18,12 @@ export class RefStore implements IRefStore {
 
     return head.split(' ')[1];
   }
+
+  async setHeadRef(branch: string): Promise<void> {
+    const ref = `ref: refs/heads/${branch}\n`;
+    await this.fileSystem.write(this.repositoryPaths.head(), Buffer.from(ref));
+  }
+
   async getCurrentCommit(): Promise<string | undefined> {
     const ref = await this.getHeadRef();
 
@@ -29,6 +35,17 @@ export class RefStore implements IRefStore {
 
     return (await this.fileSystem.read(branchPath)).toString().trim();
   }
+
+  async getBranchCommit(branch: string): Promise<string | undefined> {
+    const branchPath = this.repositoryPaths.branch(branch);
+
+    if (!(await this.fileSystem.exists(branchPath))) {
+      return undefined;
+    }
+
+    return (await this.fileSystem.read(branchPath)).toString().trim();
+  }
+
   async updateCurrentBranch(hash: string): Promise<void> {
     const ref = await this.getHeadRef();
 

@@ -11,6 +11,9 @@ describe('RepositoryPaths', () => {
     expect(paths.myGit()).toBe(path.join('/repo', '.mygit'));
     expect(paths.objects()).toBe(path.join('/repo', '.mygit', 'objects'));
     expect(paths.refs()).toBe(path.join('/repo', '.mygit', 'refs'));
+    expect(paths.branch('main')).toBe(
+      path.join('/repo', '.mygit', 'refs', 'heads', 'main'),
+    );
     expect(paths.head()).toBe(path.join('/repo', '.mygit', 'HEAD'));
     expect(paths.index()).toBe(path.join('/repo', '.mygit', 'index'));
   });

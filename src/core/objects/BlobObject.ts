@@ -8,4 +8,8 @@ export class BlobObject implements IGitObject {
 
     return Buffer.concat([Buffer.from(header), this.content]);
   }
+
+  public static parse(data: Buffer) {
+    return data.toString().split('\0')[1];
+  }
 }

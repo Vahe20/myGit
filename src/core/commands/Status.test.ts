@@ -1,7 +1,7 @@
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { IHashService } from '../../infrastructure/hashing/IHashService';
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { IIndexService } from '../indexService/IIndexService';
 import { CommitObject } from '../objects/CommitObject';
 import { TreeObject } from '../objects/TreeObject';
 import { RefStore } from '../refs/RefStore';
@@ -16,6 +16,7 @@ const createIndex = (entries: [string, string][]): IIndexService => {
     save: jest.fn().mockResolvedValue(undefined),
     load: jest.fn(),
     getAll: jest.fn().mockReturnValue(new Map(entries)),
+    clear: jest.fn(),
   };
 
   jest.mocked(index.load).mockResolvedValue(index);

@@ -1,5 +1,5 @@
 import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
-import { IIndexService } from '../indexService/IIndexService';
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { Rm } from './Rm';
 
 const createFileSystem = (): IFileSystem => ({
@@ -26,6 +26,7 @@ const createIndex = (entries: [string, string][]): IIndexService => {
     save: jest.fn().mockResolvedValue(undefined),
     load: jest.fn(),
     getAll: jest.fn(() => map),
+    clear: jest.fn(),
   };
 
   jest.mocked(index.load).mockResolvedValue(index);

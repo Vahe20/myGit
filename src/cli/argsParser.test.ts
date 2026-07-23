@@ -2,9 +2,9 @@ import { argsParser } from './argsParser';
 
 describe('argsParser', () => {
   it('parses a command with positional arguments', () => {
-    expect(argsParser(['commit', 'file.txt', 'src/indexService.ts'])).toEqual({
+    expect(argsParser(['commit', 'file.txt', 'src/index.ts'])).toEqual({
       command: 'commit',
-      args: ['file.txt', 'src/indexService.ts'],
+      args: ['file.txt', 'src/index.ts'],
       options: {},
     });
   });

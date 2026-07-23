@@ -1,4 +1,4 @@
-import { IIndexService } from '../../core/indexService/IIndexService';
+import { IIndexService } from '../../services/indexService/IIndexService';
 import { TreeBuilder } from './treeBuilder';
 
 const createIndex = (entries: [string, string][]): IIndexService => {
@@ -10,6 +10,7 @@ const createIndex = (entries: [string, string][]): IIndexService => {
     save: jest.fn().mockResolvedValue(undefined),
     load: jest.fn(),
     getAll: jest.fn().mockReturnValue(new Map(entries)),
+    clear: jest.fn(),
   };
 
   jest.mocked(index.load).mockResolvedValue(index);

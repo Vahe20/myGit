@@ -6,6 +6,7 @@ export class RepositoryPaths {
   private ignorePath: string;
   private objectsPath: string;
   private refsPath: string;
+  private branchPath: string;
   private headPath: string;
   private indexPath: string;
 
@@ -15,6 +16,7 @@ export class RepositoryPaths {
     this.myGitPath = path.join(basePath, '.mygit');
     this.objectsPath = path.join(this.myGitPath, 'objects');
     this.refsPath = path.join(this.myGitPath, 'refs');
+    this.branchPath = path.join(this.myGitPath, 'refs/heads');
     this.headPath = path.join(this.myGitPath, 'HEAD');
     this.indexPath = path.join(this.myGitPath, 'index');
   }
@@ -27,6 +29,14 @@ export class RepositoryPaths {
     return path.join(this.myGitPath, ref);
   }
 
+  refs(): string {
+    return this.refsPath;
+  }
+
+  branch(name: string): string {
+    return path.join(this.branchPath, name);
+  }
+
   myGit(): string {
     return this.myGitPath;
   }
@@ -36,9 +46,6 @@ export class RepositoryPaths {
   }
   objects(): string {
     return this.objectsPath;
-  }
-  refs(): string {
-    return this.refsPath;
   }
   head(): string {
     return this.headPath;

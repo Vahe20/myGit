@@ -1,5 +1,5 @@
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { Logger } from '../../utils/logger/Logger';
+import { ILogger } from '../../utils/logger/ILogger';
 import { CommitObject } from '../objects/CommitObject';
 import { IRefStore } from '../refs/IRefStore';
 import { ICommand } from './ICommand';
@@ -8,7 +8,7 @@ export class Log implements ICommand {
   constructor(
     private readonly objectStore: IObjectStore,
     private readonly refStore: IRefStore,
-    private readonly logger: Logger,
+    private readonly logger: ILogger,
   ) {}
 
   public async execute(): Promise<void> {
