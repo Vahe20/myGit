@@ -11,8 +11,7 @@ export class TreeRestorer {
     private readonly fileSystem: IFileSystem,
     private readonly objectStore: IObjectStore,
     private readonly indexService: IIndexService,
-  ) {
-  }
+  ) {}
 
   public async restore(treeHash: string): Promise<void> {
     this.indexService.clear();

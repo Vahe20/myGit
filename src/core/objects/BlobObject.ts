@@ -1,8 +1,7 @@
 import { IGitObject } from './IGitObject';
 
 export class BlobObject implements IGitObject {
-  constructor(private readonly content: Buffer) {
-  }
+  constructor(private readonly content: Buffer) {}
 
   public serialize(): Buffer {
     const header = `blob ${this.content.length}\0`;
