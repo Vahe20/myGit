@@ -15,7 +15,7 @@ const createFileSystem = (): IFileSystem => ({
 });
 
 const createIndex = (): IIndexService => {
-  const index: IIndexService = {
+  const indexService: IIndexService = {
     add: jest.fn().mockReturnThis(),
     get: jest.fn(),
     has: jest.fn(),
@@ -26,9 +26,9 @@ const createIndex = (): IIndexService => {
     clear: jest.fn(),
   };
 
-  jest.mocked(index.load).mockResolvedValue(index);
+  jest.mocked(indexService.load).mockResolvedValue(indexService);
 
-  return index;
+  return indexService;
 };
 
 describe('Add', () => {

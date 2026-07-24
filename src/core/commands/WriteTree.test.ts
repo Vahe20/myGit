@@ -12,7 +12,7 @@ describe('WriteTree', () => {
       buildPath: jest.fn(),
     };
 
-    const index: IIndexService = {
+    const indexService: IIndexService = {
       add: jest.fn().mockReturnThis(),
       get: jest.fn(),
       has: jest.fn(),
@@ -24,11 +24,11 @@ describe('WriteTree', () => {
         .mockReturnValue(new Map([['src/main.ts', 'blob-hash']])),
       clear: jest.fn(),
     };
-    jest.mocked(index.load).mockResolvedValue(index);
+    jest.mocked(indexService.load).mockResolvedValue(indexService);
 
     const writeTree = new WriteTree(objectStore);
 
-    const result = await writeTree.execute(index);
+    const result = await writeTree.execute(indexService);
 
     expect(result).toBe('tree-hash');
 

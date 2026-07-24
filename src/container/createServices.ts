@@ -7,7 +7,8 @@ import { SHA1HashService } from '../infrastructure/hashing/SHA1HashService';
 import { FileScanner } from '../services/fileScanner/FileScanner';
 import { IndexService } from '../services/indexService/IndexService';
 import { ObjectStore } from '../services/objectStore/ObjectStore';
-import { TreeRestorer } from '../services/treeRestorer/TreeRestorer';
+import { TreeReader } from '../services/treeReader/TreeReader';
+import { WorkingTreeRestorer } from '../services/workingTreeRestorer/WorkingTreeRestorer';
 import { ILogger } from '../utils/logger/ILogger';
 import { Logger } from '../utils/logger/Logger';
 
@@ -18,11 +19,12 @@ export interface Services {
   scanner: FileScanner;
   hashService: SHA1HashService;
   compressionService: ZlibCompressionService;
-  index: IndexService;
+  indexService: IndexService;
   objectStore: ObjectStore;
   repository: Repository;
   refStore: RefStore;
-  treeRestorer: TreeRestorer;
+  workingTreeRestorer: WorkingTreeRestorer;
+  treeReader: TreeReader;
 }
 
 export const createServices = (): Services => {
@@ -43,7 +45,13 @@ export const createServices = (): Services => {
     repositoryPaths,
   );
 
-  const treeRestorer = new TreeRestorer(fileSystem, objectStore, indexService);
+  const workingTreeRestorer = new WorkingTreeRestorer(
+    fileSystem,
+    objectStore,
+    indexService,
+  );
+
+  const treeReader = new TreeReader(objectStore);
 
   return {
     logger,
@@ -52,10 +60,11 @@ export const createServices = (): Services => {
     scanner,
     hashService,
     compressionService,
-    index: indexService,
+    indexService,
     objectStore,
     repository,
     refStore,
-    treeRestorer,
+    workingTreeRestorer,
+    treeReader,
   };
 };

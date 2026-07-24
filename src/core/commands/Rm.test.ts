@@ -15,13 +15,13 @@ const createFileSystem = (): IFileSystem => ({
 const createIndex = (entries: [string, string][]): IIndexService => {
   const map = new Map(entries);
 
-  const index: IIndexService = {
+  const indexService: IIndexService = {
     add: jest.fn().mockReturnThis(),
     get: jest.fn((path: string) => map.get(path)),
     has: jest.fn((path: string) => map.has(path)),
     remove: jest.fn((path: string) => {
       map.delete(path);
-      return index;
+      return indexService;
     }),
     save: jest.fn().mockResolvedValue(undefined),
     load: jest.fn(),
@@ -29,9 +29,9 @@ const createIndex = (entries: [string, string][]): IIndexService => {
     clear: jest.fn(),
   };
 
-  jest.mocked(index.load).mockResolvedValue(index);
+  jest.mocked(indexService.load).mockResolvedValue(indexService);
 
-  return index;
+  return indexService;
 };
 
 describe('Rm', () => {

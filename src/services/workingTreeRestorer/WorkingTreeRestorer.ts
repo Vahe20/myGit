@@ -6,7 +6,7 @@ import { IFileSystem } from '../../infrastructure/fileSystem/IFileSystem';
 import { IIndexService } from '../indexService/IIndexService';
 import { IObjectStore } from '../objectStore/IObjectStore';
 
-export class TreeRestorer {
+export class WorkingTreeRestorer {
   constructor(
     private readonly fileSystem: IFileSystem,
     private readonly objectStore: IObjectStore,
@@ -36,12 +36,16 @@ export class TreeRestorer {
         continue;
       }
 
-      const blobBuffer = await this.objectStore.read(entry.hash);
-      const content = BlobObject.parse(blobBuffer);
-
-      await this.fileSystem.write(filePath, Buffer.from(content));
+      await this.restoreBlob(filePath, entry.hash);
 
       this.indexService.add(filePath, entry.hash);
     }
+  }
+
+  public async restoreBlob(filePath: string, blobHash: string) {
+    const blobBuffer = await this.objectStore.read(blobHash);
+    const content = BlobObject.parse(blobBuffer);
+
+    await this.fileSystem.write(filePath, Buffer.from(content));
   }
 }

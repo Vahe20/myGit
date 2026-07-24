@@ -6,6 +6,7 @@ import { Commit } from '../core/commands/Commit';
 import { CommitTree } from '../core/commands/CommitTree';
 import { Init } from '../core/commands/Init';
 import { Log } from '../core/commands/Log';
+import { Restore } from '../core/commands/Restore';
 import { Rm } from '../core/commands/Rm';
 import { Status } from '../core/commands/Status';
 import { WriteTree } from '../core/commands/WriteTree';
@@ -23,6 +24,7 @@ export interface Commands {
   cutFile: CatFile;
   branch: Branch;
   checkout: Checkout;
+  restore: Restore;
 }
 
 export const createCommands = (services: Services): Commands => {
@@ -31,22 +33,28 @@ export const createCommands = (services: Services): Commands => {
     services.fileSystem,
     services.scanner,
     services.objectStore,
-    services.index,
+    services.indexService,
   );
   const status = new Status(
     services.fileSystem,
     services.scanner,
-    services.index,
+    services.indexService,
     services.hashService,
     services.objectStore,
     services.refStore,
   );
   const writeTree = new WriteTree(services.objectStore);
   const commitTree = new CommitTree(services.objectStore, services.refStore);
-  const commit = new Commit(writeTree, commitTree, services.index);
+  const commit = new Commit(writeTree, commitTree, services.indexService);
   const log = new Log(services.objectStore, services.refStore, services.logger);
-  const rm = new Rm(services.fileSystem, services.index);
-  const cutFile = new CatFile(services.objectStore, services.logger);
+  const rm = new Rm(services.fileSystem, services.indexService);
+  const restore = new Restore(
+    services.objectStore,
+    services.refStore,
+    services.workingTreeRestorer,
+    services.treeReader,
+  );
+  const catFile = new CatFile(services.objectStore, services.logger);
   const branch = new Branch(
     services.fileSystem,
     services.repositoryPaths,
@@ -55,7 +63,7 @@ export const createCommands = (services: Services): Commands => {
   const checkout = new Checkout(
     services.refStore,
     services.objectStore,
-    services.treeRestorer,
+    services.workingTreeRestorer,
   );
 
   return {
@@ -67,8 +75,9 @@ export const createCommands = (services: Services): Commands => {
     commit,
     log,
     rm,
-    cutFile,
+    cutFile: catFile,
     branch,
     checkout,
+    restore,
   };
 };

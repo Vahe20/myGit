@@ -43,6 +43,17 @@ const main = async () => {
       break;
     }
 
+    case 'restore': {
+      const rawPath = cli.args[0];
+
+      if (!rawPath) {
+        throw new Error('File path is required');
+      }
+
+      await commands.restore.execute(rawPath);
+      break;
+    }
+
     case 'status': {
       const status = await commands.status.execute();
 
@@ -51,7 +62,7 @@ const main = async () => {
     }
 
     case 'write-tree': {
-      const hash = await commands['write-tree'].execute(services.index);
+      const hash = await commands['write-tree'].execute(services.indexService);
       services.logger.info('tree hash: ' + hash);
       break;
     }

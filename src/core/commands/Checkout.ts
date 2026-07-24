@@ -1,5 +1,5 @@
 import { IObjectStore } from '../../services/objectStore/IObjectStore';
-import { TreeRestorer } from '../../services/treeRestorer/TreeRestorer';
+import { WorkingTreeRestorer } from '../../services/workingTreeRestorer/WorkingTreeRestorer';
 import { CommitObject } from '../objects/CommitObject';
 import { IRefStore } from '../refs/IRefStore';
 import { ICommand } from './ICommand';
@@ -8,7 +8,7 @@ export class Checkout implements ICommand<void, [string]> {
   constructor(
     private readonly refStore: IRefStore,
     private readonly objectStore: IObjectStore,
-    private readonly treeRestorer: TreeRestorer,
+    private readonly workingTreeRestorer: WorkingTreeRestorer,
   ) {}
 
   public async execute(branch: string): Promise<void> {
@@ -22,7 +22,7 @@ export class Checkout implements ICommand<void, [string]> {
 
     const treeHash = CommitObject.parse(buffer).tree;
 
-    await this.treeRestorer.restore(treeHash);
+    await this.workingTreeRestorer.restore(treeHash);
 
     await this.refStore.setHeadRef(branch);
   }

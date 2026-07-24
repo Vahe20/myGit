@@ -7,9 +7,9 @@ import { ICommand } from './ICommand';
 
 export class WriteTree implements ICommand<string, [IIndexService]> {
   constructor(private readonly objectStore: IObjectStore) {}
-  public async execute(index: IIndexService) {
-    await index.load();
-    const tree = await new TreeBuilder().build(index);
+  public async execute(indexService: IIndexService) {
+    await indexService.load();
+    const tree = await new TreeBuilder().build(indexService);
     return await this.buildTree(tree);
   }
 

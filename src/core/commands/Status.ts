@@ -7,19 +7,27 @@ import { BlobObject } from '../objects/BlobObject';
 import { CommitObject } from '../objects/CommitObject';
 import { TreeObject } from '../objects/TreeObject';
 import { IRefStore } from '../refs/IRefStore';
+import { ICommand } from './ICommand';
 
-export class Status {
+interface returnObject {
+  staged: { path: string; hash: string }[];
+  modified: { path: string; hash: string }[];
+  deleted: { path: string; hash: string }[];
+  untracked: { path: string; hash: string }[];
+}
+
+export class Status implements ICommand<returnObject> {
   constructor(
     private readonly fileSystem: IFileSystem,
     private readonly scanner: IFileScanner,
-    private readonly index: IIndexService,
+    private readonly indexService: IIndexService,
     private readonly hashService: IHashService,
     private readonly objectStore: IObjectStore,
     private readonly refStore: IRefStore,
   ) {}
 
-  async execute() {
-    const index = (await this.index.load()).getAll();
+  public async execute() {
+    const index = (await this.indexService.load()).getAll();
 
     const head = await this.loadHeadFiles();
 

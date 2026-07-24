@@ -7,11 +7,11 @@ export class Commit implements ICommand<string, [string]> {
   constructor(
     private readonly writeTree: WriteTree,
     private readonly commitTree: CommitTree,
-    private readonly index: IndexService,
+    private readonly indexService: IndexService,
   ) {}
 
   async execute(message: string): Promise<string> {
-    const treeHash = await this.writeTree.execute(this.index);
+    const treeHash = await this.writeTree.execute(this.indexService);
 
     return this.commitTree.execute(treeHash, message);
   }

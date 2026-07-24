@@ -10,11 +10,11 @@ export class Add implements ICommand<void, [string]> {
     private readonly fileSystem: IFileSystem,
     private readonly scanner: IFileScanner,
     private readonly objectStore: IObjectStore,
-    private readonly index: IIndexService,
+    private readonly indexService: IIndexService,
   ) {}
 
   async execute(path: string): Promise<void> {
-    await this.index.load();
+    await this.indexService.load();
 
     if (path === '.') {
       const files = await this.scanner.scan();
@@ -23,12 +23,12 @@ export class Add implements ICommand<void, [string]> {
         await this.addFile(file);
       }
 
-      await this.index.save();
+      await this.indexService.save();
       return;
     }
 
     await this.addFile(path);
-    await this.index.save();
+    await this.indexService.save();
   }
 
   private async addFile(path: string): Promise<void> {
@@ -38,6 +38,6 @@ export class Add implements ICommand<void, [string]> {
 
     const hash = await this.objectStore.save(blob);
 
-    this.index.add(path, hash);
+    this.indexService.add(path, hash);
   }
 }

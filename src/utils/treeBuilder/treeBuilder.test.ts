@@ -2,7 +2,7 @@ import { IIndexService } from '../../services/indexService/IIndexService';
 import { TreeBuilder } from './treeBuilder';
 
 const createIndex = (entries: [string, string][]): IIndexService => {
-  const index: IIndexService = {
+  const indexService: IIndexService = {
     add: jest.fn().mockReturnThis(),
     get: jest.fn(),
     has: jest.fn(),
@@ -13,9 +13,9 @@ const createIndex = (entries: [string, string][]): IIndexService => {
     clear: jest.fn(),
   };
 
-  jest.mocked(index.load).mockResolvedValue(index);
+  jest.mocked(indexService.load).mockResolvedValue(indexService);
 
-  return index;
+  return indexService;
 };
 
 describe('TreeBuilder', () => {
